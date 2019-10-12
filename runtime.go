@@ -217,6 +217,12 @@ type ToJavaConverter interface {
 	CleanUp() error
 }
 
+func MustConvertTo(converter ToJavaConverter, value interface{}) {
+	if err := converter.Convert(value); err != nil {
+		panic(err)
+	}
+}
+
 func ObjectRef(v interface{}) *jnigi.ObjectRef {
 	return v.(*jnigi.ObjectRef)
 }
@@ -225,6 +231,12 @@ type FromJavaConverter interface {
 	Dest(ptr interface{})
 	Convert(obj *jnigi.ObjectRef) error
 	CleanUp() error
+}
+
+func MustConvertFrom(converter FromJavaConverter, obj *jnigi.ObjectRef) {
+	if err := converter.Convert(obj); err != nil {
+		panic(err)
+	}
 }
 
 type GoToJavaCallable struct {
