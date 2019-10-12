@@ -139,13 +139,13 @@ func (a *AttachedThread) Stop() {
 	a.quit <- 1
 }
 
-func SetupJVM(classPath string) (err error) {
+func SetupJVM(args ...string) (err error) {
 	//classPath = append(classPath, gojvm.DefaultJREPath)
 	if debug {
-		log.Printf("Using classpath %v", classPath)
+		log.Printf("JVM args: %v", args)
 	}
 
-	args := []string{"-Djava.class.path=" + classPath}
+	// []string{"-Djava.class.path=" + classPath}
 	// []string{"-Xcheck:jni"}
 	jvm2, env, err := jnigi.CreateJVM(jnigi.NewJVMInitArgs(false, true, jnigi.DEFAULT_VERSION, args))
 	if err != nil {
