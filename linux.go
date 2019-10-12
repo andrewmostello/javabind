@@ -6,8 +6,8 @@
 
 package javabind
 
-import "syscall"
+import "golang.org/x/sys/unix"
 
 func GetThreadId() int {
-	return syscall.Gettid()
+	return unix.Gettid()
 }
