@@ -6,26 +6,27 @@ package javabind
 
 import (
 	"errors"
-	"github.com/timob/jnigi"
 	"log"
 	"reflect"
 	"sync"
 	"time"
 	"unsafe"
+
+	"github.com/timob/jnigi"
 )
 
 const (
-	Void = jnigi.Void
+	Void    = jnigi.Void
 	Boolean = jnigi.Boolean
-	Byte = jnigi.Byte
-	Char = jnigi.Char
-	Short = jnigi.Short
-	Int = jnigi.Int
-	Long = jnigi.Long
-	Float = jnigi.Float
-	Double = jnigi.Double
-	Object = jnigi.Object
-	Array = jnigi.Array
+	Byte    = jnigi.Byte
+	Char    = jnigi.Char
+	Short   = jnigi.Short
+	Int     = jnigi.Int
+	Long    = jnigi.Long
+	Float   = jnigi.Float
+	Double  = jnigi.Double
+	Object  = jnigi.Object
+	Array   = jnigi.Array
 )
 
 func ObjectType(className string) jnigi.ObjectType {
@@ -318,7 +319,7 @@ func (j *JavaToGoString) Convert(obj *jnigi.ObjectRef) error {
 	j.obj = obj
 
 	j.env.PrecalculateSignature("(Ljava/lang/String;)[B")
-	v, err := j.obj.CallMethod(j.env, "getBytes", Byte | Array, j.env.GetUTF8String())
+	v, err := j.obj.CallMethod(j.env, "getBytes", Byte|Array, j.env.GetUTF8String())
 	if err != nil {
 		return err
 	}
@@ -361,7 +362,7 @@ func (g *GoToJavaList) Convert(value interface{}) (err error) {
 			return
 		}
 
-//		g.env.PrecalculateSignature("(Ljava/lang/Object;)Z")
+		//		g.env.PrecalculateSignature("(Ljava/lang/Object;)Z")
 		_, err = listObj.CallMethod(g.env, "add", Boolean, g.item.Value().Cast("java/lang/Object"))
 		if err != nil {
 			return
@@ -486,7 +487,6 @@ func (j *JavaToGoIterator) Convert(obj *jnigi.ObjectRef) (err error) {
 			break
 		}
 
-
 		next, err := CallObjectMethod(obj, j.env, "next", "java/lang/Object")
 		if err != nil {
 			return err
@@ -525,7 +525,7 @@ func (g *GoToJavaCollection) Value() *jnigi.ObjectRef {
 }
 
 type JavaToGoCollection struct {
-	env *jnigi.Env
+	env  *jnigi.Env
 	iter *jnigi.ObjectRef
 	*JavaToGoIterator
 }
@@ -552,7 +552,7 @@ func (j *JavaToGoCollection) CleanUp() (err error) {
 }
 
 type JavaToGoSet struct {
-	env *jnigi.Env
+	env  *jnigi.Env
 	iter *jnigi.ObjectRef
 	*JavaToGoIterator
 }
@@ -641,7 +641,7 @@ type JavaToGoMap struct {
 	env    *jnigi.Env
 	key    FromJavaConverter
 	value  FromJavaConverter
-	list *jnigi.ObjectRef
+	list   *jnigi.ObjectRef
 }
 
 func NewJavaToGoMap(key, value FromJavaConverter) *JavaToGoMap {
@@ -802,11 +802,11 @@ func (j *JavaToGoMap_Entry) CleanUp() (err error) {
 }
 
 type GoToJavaObjectArray struct {
-	item  ToJavaConverter
+	item        ToJavaConverter
 	objectArray *jnigi.ObjectRef
-	env *jnigi.Env
-	className string
-	list []*jnigi.ObjectRef
+	env         *jnigi.Env
+	className   string
+	list        []*jnigi.ObjectRef
 }
 
 func NewGoToJavaObjectArray(item ToJavaConverter, className string) *GoToJavaObjectArray {
@@ -828,11 +828,11 @@ func (g *GoToJavaObjectArray) Convert(value interface{}) (err error) {
 		}
 
 		a[i] = g.item.Value()
-/*
-		if err = g.item.CleanUp(); err != nil {
-			return
-		}
-*/
+		/*
+			if err = g.item.CleanUp(); err != nil {
+				return
+			}
+		*/
 	}
 	g.objectArray = g.env.ToObjectArray(a, g.className)
 	g.list = a
